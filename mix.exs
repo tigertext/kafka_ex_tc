@@ -8,8 +8,8 @@ defmodule KafkaEx.Mixfile do
   def project do
     [
       app: :kafka_ex,
-      version: @version,
-      elixir: "~> 1.6",
+      version: "0.12.1",
+      elixir: "~> 1.10.4",
       dialyzer: [
         plt_add_deps: :transitive,
         flags: [
@@ -39,12 +39,15 @@ defmodule KafkaEx.Mixfile do
   def application do
     [
       mod: {KafkaEx, []},
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      applications: [:lager],
+      erl_opts: [parse_transform: "lager_transform"]
     ]
   end
 
   defp deps do
     main_deps = [
+      {:lager, "3.8.0"},
       {:kayrock, "~> 0.1.12"},
       {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.3", only: :dev, runtime: false},
@@ -69,6 +72,7 @@ defmodule KafkaEx.Mixfile do
 
   defp package do
     [
+      name: "kafka_ex_tc",
       maintainers: ["Abejide Ayodele", "Dan Swain", "Jack Lund", "Joshua Scott"],
       files: ["lib", "config/config.exs", "mix.exs", "README.md"],
       licenses: ["MIT"],
