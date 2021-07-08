@@ -11,3 +11,5 @@ doc
 
 .elixir_ls
 cover
+
+/log
