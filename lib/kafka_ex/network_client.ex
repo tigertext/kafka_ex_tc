@@ -7,7 +7,13 @@ defmodule KafkaEx.NetworkClient do
   @moduledoc false
   @spec create_socket(binary, non_neg_integer, KafkaEx.ssl_options(), boolean) ::
           nil | Socket.t()
-  def create_socket(host, port, ssl_options \\ [], use_ssl \\ false) do
+  def create_socket(
+        host,
+        port,
+        ssl_options \\ [],
+        use_ssl \\ false,
+        reason \\ "unknown"
+      ) do
     case Socket.create(
            format_host(host),
            port,
@@ -17,7 +23,9 @@ defmodule KafkaEx.NetworkClient do
       {:ok, socket} ->
         Logger.log(
           :debug,
-          "Successfully connected to broker #{inspect(host)}:#{inspect(port)}"
+          "Successfully connected to broker #{inspect(host)}:#{inspect(port)} for #{
+            inspect(reason)
+          } #{inspect(self())}"
         )
 
         socket

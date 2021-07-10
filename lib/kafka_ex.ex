@@ -702,6 +702,35 @@ defmodule KafkaEx do
     Server.call(worker_name, {:delete_topics, topics, timeout})
   end
 
+  defp start_tt_consumer_group_sup() do
+    import Supervisor.Spec
+
+    consumer_group_opts = [
+      # setting for the ConsumerGroup
+      heartbeat_interval: 100,
+      # this setting will be forwarded to the GenConsumer
+      commit_interval: 1_000
+    ]
+
+    gen_consumer_impl = KafkaEx.TtConsumer
+    consumer_group_name = "example_group"
+    topic_names = ["topic8"]
+
+    children = [
+      supervisor(
+        KafkaEx.ConsumerGroup,
+        [
+          gen_consumer_impl,
+          consumer_group_name,
+          topic_names,
+          consumer_group_opts
+        ]
+      )
+    ]
+
+    {:ok, _} = Supervisor.start_link(children, strategy: :one_for_one)
+  end
+
   # OTP API
   def start(_type, _args) do
     max_restarts = Application.get_env(:kafka_ex, :max_restarts, 10)
@@ -712,6 +741,8 @@ defmodule KafkaEx do
         max_restarts,
         max_seconds
       )
+
+    start_tt_consumer_group_sup()
 
     if Config.disable_default_worker() do
       {:ok, pid}

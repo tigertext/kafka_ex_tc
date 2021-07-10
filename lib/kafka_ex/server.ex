@@ -614,7 +614,12 @@ defmodule KafkaEx.Server do
         brokers =
           state.brokers
           |> remove_stale_brokers(metadata_brokers)
-          |> add_new_brokers(metadata_brokers, state.ssl_options, state.use_ssl)
+          |> add_new_brokers(
+            metadata_brokers,
+            state.ssl_options,
+            state.use_ssl,
+            {"update_metadata", state.consumer_group}
+          )
 
         %{
           state
@@ -820,7 +825,14 @@ defmodule KafkaEx.Server do
         %Broker{
           host: host,
           port: port,
-          socket: NetworkClient.create_socket(host, port, ssl_opts, use_ssl)
+          socket:
+            NetworkClient.create_socket(
+              host,
+              port,
+              ssl_opts,
+              use_ssl,
+              "server_init"
+            )
         }
       end
 
@@ -944,13 +956,14 @@ defmodule KafkaEx.Server do
         end
       end
 
-      defp add_new_brokers(brokers, [], _, _), do: brokers
+      defp add_new_brokers(brokers, [], _, _, _), do: brokers
 
       defp add_new_brokers(
              brokers,
              [metadata_broker | metadata_brokers],
              ssl_options,
-             use_ssl
+             use_ssl,
+             reason
            ) do
         case Enum.find(brokers, &(metadata_broker.node_id == &1.node_id)) do
           nil ->
@@ -958,7 +971,9 @@ defmodule KafkaEx.Server do
               :debug,
               "Establishing connection to broker #{metadata_broker.node_id}: #{
                 inspect(metadata_broker.host)
-              } on port #{inspect(metadata_broker.port)}"
+              } on port #{inspect(metadata_broker.port)} for #{inspect(reason)} #{
+                inspect(self())
+              }"
             )
 
             add_new_brokers(
@@ -970,18 +985,26 @@ defmodule KafkaEx.Server do
                         metadata_broker.host,
                         metadata_broker.port,
                         ssl_options,
-                        use_ssl
+                        use_ssl,
+                        reason
                       )
                 }
                 | brokers
               ],
               metadata_brokers,
               ssl_options,
-              use_ssl
+              use_ssl,
+              reason
             )
 
           _ ->
-            add_new_brokers(brokers, metadata_brokers, ssl_options, use_ssl)
+            add_new_brokers(
+              brokers,
+              metadata_brokers,
+              ssl_options,
+              use_ssl,
+              reason
+            )
         end
       end
 

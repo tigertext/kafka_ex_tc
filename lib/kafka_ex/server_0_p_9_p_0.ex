@@ -95,7 +95,14 @@ defmodule KafkaEx.Server0P9P0 do
         %Broker{
           host: host,
           port: port,
-          socket: NetworkClient.create_socket(host, port, ssl_options, use_ssl)
+          socket:
+            NetworkClient.create_socket(
+              host,
+              port,
+              ssl_options,
+              use_ssl,
+              {"server_init", consumer_group}
+            )
         }
       end)
 

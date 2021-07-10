@@ -464,6 +464,13 @@ defmodule KafkaEx.GenConsumer do
     {server_opts, consumer_opts} =
       Keyword.split(opts, [:debug, :name, :timeout, :spawn_opt])
 
+    Logger.log(
+      :debug,
+      "Starting gen_consumer for topic #{inspect(topic)} partition #{
+        inspect(partition)
+      }"
+    )
+
     GenServer.start_link(
       __MODULE__,
       {consumer_module, group_name, topic, partition, consumer_opts},
