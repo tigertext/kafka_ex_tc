@@ -54,7 +54,8 @@ defmodule KafkaEx.Mixfile do
       {:excoveralls, "~> 0.7", only: :test, runtime: false},
       {:snappy,
        git: "https://github.com/fdmanana/snappy-erlang-nif", only: [:dev, :test]},
-      {:snappyer, "~> 1.2", only: [:dev, :test]}
+      {:snappyer, "~> 1.2", only: [:dev, :test]},
+      {:git_hooks, "~> 0.6.3", only: [:dev], runtime: false}
     ]
 
     # we need a newer version of ex_doc, but it will cause problems on older
