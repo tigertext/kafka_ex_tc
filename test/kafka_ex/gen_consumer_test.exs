@@ -1,6 +1,5 @@
 defmodule KafkaEx.GenConsumerTest do
   use ExUnit.Case
-  import ExUnit.CaptureLog
 
   # non-integration GenConsumer tests
 
@@ -19,8 +18,8 @@ defmodule KafkaEx.GenConsumerTest do
   end
 
   test "calling handle_info raises an error if there is no implementation" do
-    assert capture_log(fn ->
-             TestConsumer.handle_info(nil, nil)
-           end) =~ "unexpected message in handle_info"
+    fun = fn -> TestConsumer.handle_info(nil, nil) end
+    msg = '~p ~p received unexpected message in handle_info/2: ~p~n'
+    TestHelper.capture_log(:error, fun, msg)
   end
 end

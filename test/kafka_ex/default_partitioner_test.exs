@@ -89,58 +89,11 @@ defmodule KafkaEx.DefaultPartitionerTest do
       ]
     }
 
-    #    :dbg.stop_clear
-    #    :dbg.start
-    #    :dbg.tracer(:process, {
-    #      fn {:trace, _, :call,
-    #           {KafkaEx.Utils.Logger, :warn,
-    #             ["Elixir.KafkaEx.DefaultPartitioner: couldn't assign partition due to :inconsistent_keys"]}}, _ ->
-    #        IO.inspect(:okkkkk)
-    #      end, 0})
-    #
-    #    :dbg.tpl(KafkaEx.Utils.Logger, :warn, 1, [])
-    #
-    #    :dbg.p(:all, :c)
-    #
-    #    DefaultPartitioner.assign_partition(request, m.(5))
-    #
-    #
-    #    :dbg.stop_clear
-    #
-    #
-    #
-
-    expected_msg =
-      "Elixir.KafkaEx.DefaultPartitioner: 1couldn't assign partition due to :inconsistent_keys"
-
     fun = fn -> DefaultPartitioner.assign_partition(request, metadata(5)) end
-    my_capture_log(:warn, 1, fun, expected_msg)
 
-    #    assert capture_log(fn ->
-    #             DefaultPartitioner.assign_partition(request, metadata(5))
-    #           end) =~
-    #             "KafkaEx.DefaultPartitioner: couldn't assign partition due to :inconsistent_keys"
-  end
+    msg =
+      "Elixir.KafkaEx.DefaultPartitioner: couldn't assign partition due to :inconsistent_keys"
 
-  def my_capture_log(level, arity, fun, expected_msg) do
-    :dbg.stop_clear()
-    :dbg.start()
-
-    :dbg.tracer(:process, {
-      fn
-        {:trace, _, :call, {KafkaEx.Utils.Logger, ^level, [^expected_msg]}},
-        _ ->
-          :ok
-
-        _, _ ->
-          :a = :b
-      end,
-      0
-    })
-
-    :dbg.tpl(KafkaEx.Utils.Logger, level, arity, [])
-    :dbg.p(:all, :c)
-    fun.()
-    :dbg.stop_clear()
+    TestHelper.capture_log(:warn, fun, msg)
   end
 end
