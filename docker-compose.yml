@@ -14,20 +14,20 @@ services:
 
   kafka1:
     hostname: kafka1
-    image: wurstmeister/kafka:0.11.0.1
+    image: wurstmeister/kafka:2.12-2.3.1
     ports:
       - "9093:9093"
-    depends_on:
-      - zookeeper
     volumes:
       - ./ssl:/ssl
       - ./scripts/kafka_check_health:/kafka_check_health
     env_file: docker-compose-kafka.env
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ADVERTISED_PORT: 9093
-      KAFKA_PORT: 9092
-      KAFKA_HOST_NAME: kafka1
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka1:9092,OUTSIDE://localhost:9093
+      KAFKA_LISTENERS: INSIDE://kafka1:9092,OUTSIDE://kafka1:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
     healthcheck:
       test: /kafka_check_health
       interval: 10s
@@ -40,20 +40,20 @@ services:
 
   kafka2:
     hostname: kafka2
-    image: wurstmeister/kafka:0.11.0.1
+    image: wurstmeister/kafka:2.12-2.3.1
     ports:
       - "9094:9094"
-    depends_on:
-      - zookeeper
     volumes:
       - ./ssl:/ssl
       - ./scripts/kafka_check_health:/kafka_check_health
     env_file: docker-compose-kafka.env
     environment:
       KAFKA_BROKER_ID: 2
-      KAFKA_ADVERTISED_PORT: 9094
-      KAFKA_PORT: 9092
-      KAFKA_HOST_NAME: kafka2
+      KAFKA_ADVERTISED_HOST_NAME: kafka2
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka2:9092,OUTSIDE://localhost:9094
+      KAFKA_LISTENERS: INSIDE://kafka2:9092,OUTSIDE://kafka2:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
     healthcheck:
       test: /kafka_check_health
       interval: 10s
@@ -66,20 +66,20 @@ services:
 
   kafka3:
     hostname: kafka3
-    image: wurstmeister/kafka:0.11.0.1
+    image: wurstmeister/kafka:2.12-2.3.1
     ports:
       - "9095:9095"
-    depends_on:
-      - zookeeper
     volumes:
       - ./ssl:/ssl
       - ./scripts/kafka_check_health:/kafka_check_health
     env_file: docker-compose-kafka.env
     environment:
       KAFKA_BROKER_ID: 3
-      KAFKA_ADVERTISED_PORT: 9095
-      KAFKA_PORT: 9092
-      KAFKA_HOST_NAME: kafka3
+      KAFKA_ADVERTISED_HOST_NAME: kafka3
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka3:9092,OUTSIDE://localhost:9095
+      KAFKA_LISTENERS: INSIDE://kafka3:9092,OUTSIDE://kafka3:9095
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
     healthcheck:
       test: /kafka_check_health
       interval: 10s
