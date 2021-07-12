@@ -90,7 +90,10 @@ defmodule KafkaEx.LegacyPartitionerTest do
     }
 
     fun = fn -> LegacyPartitioner.assign_partition(request, metadata(5)) end
-    msg = "Elixir.KafkaEx.LegacyPartitioner: couldn't assign partition due to :inconsistent_keys"
+
+    msg =
+      "Elixir.KafkaEx.LegacyPartitioner: couldn't assign partition due to :inconsistent_keys"
+
     TestHelper.capture_log(:warn, fun, msg)
   end
 end
