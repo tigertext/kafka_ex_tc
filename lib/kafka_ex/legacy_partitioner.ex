@@ -13,7 +13,7 @@ defmodule KafkaEx.LegacyPartitioner do
   alias KafkaEx.Protocol.Produce.Request, as: ProduceRequest
   alias KafkaEx.Protocol.Metadata.Response, as: MetadataResponse
   alias KafkaEx.Utils.Murmur, as: Murmur
-  require Logger
+  alias KafkaEx.Utils.Logger
 
   @spec assign_partition(
           request :: %ProduceRequest{},

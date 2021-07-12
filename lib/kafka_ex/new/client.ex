@@ -65,8 +65,8 @@ defmodule KafkaEx.New.Client do
     )
   end
 
-  require Logger
   alias KafkaEx.NetworkClient
+  alias KafkaEx.Utils.Logger
 
   # Default from GenServer
   @default_call_timeout 5_000
@@ -192,8 +192,7 @@ defmodule KafkaEx.New.Client do
 
   @impl true
   def terminate(reason, state) do
-    Logger.log(
-      :debug,
+    Logger.debug(
       "Shutting down worker #{inspect(state.worker_name)}, " <>
         "reason: #{inspect(reason)}"
     )
@@ -230,8 +229,7 @@ defmodule KafkaEx.New.Client do
           )
 
         for broker <- brokers_to_close do
-          Logger.log(
-            :debug,
+          Logger.debug(
             "Closing connection to broker #{broker.node_id}: " <>
               "#{inspect(broker.host)} on port #{inspect(broker.port)}"
           )
@@ -289,8 +287,7 @@ defmodule KafkaEx.New.Client do
          0,
          error_code
        ) do
-    Logger.log(
-      :error,
+    Logger.error(
       "Metadata request for topics #{inspect(topics)} failed " <>
         "with error_code #{inspect(error_code)}"
     )
@@ -348,7 +345,7 @@ defmodule KafkaEx.New.Client do
         message =
           "Unable to fetch metadata from any brokers. Timeout is #{sync_timeout}."
 
-        Logger.log(:error, message)
+        Logger.error(message)
         raise message
         {state_out, nil}
     end
@@ -701,8 +698,7 @@ defmodule KafkaEx.New.Client do
   defp close_broker_by_socket(state, socket) do
     State.update_brokers(state, fn broker ->
       if Broker.has_socket?(broker, socket) do
-        Logger.log(
-          :debug,
+        Logger.debug(
           "Broker #{inspect(broker.host)}:#{inspect(broker.port)} closed connection"
         )
 

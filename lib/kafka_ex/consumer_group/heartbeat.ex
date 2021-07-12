@@ -24,9 +24,9 @@ defmodule KafkaEx.ConsumerGroup.Heartbeat do
   # consumer group. (see KafkaEx.ConsumerGroup.Manager.join/1)
 
   use GenServer
-  require Logger
   alias KafkaEx.Protocol.Heartbeat.Request, as: HeartbeatRequest
   alias KafkaEx.Protocol.Heartbeat.Response, as: HeartbeatResponse
+  alias KafkaEx.Utils.Logger
 
   defmodule State do
     @moduledoc false

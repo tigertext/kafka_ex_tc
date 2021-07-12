@@ -24,8 +24,7 @@ defmodule KafkaEx.Server0P9P0 do
   alias KafkaEx.Server.State
   alias KafkaEx.NetworkClient
   alias KafkaEx.Server0P8P2
-
-  require Logger
+  alias KafkaEx.Utils.Logger
 
   @consumer_group_update_interval 30_000
 
