@@ -9,7 +9,7 @@ defmodule KafkaEx.Config do
                ```
                """
 
-  require Logger
+  alias KafkaEx.Utils.Logger
 
   @doc false
   def disable_default_worker do

@@ -15,7 +15,7 @@ defmodule KafkaEx.Server0P10AndLater do
   alias KafkaEx.Protocol.Metadata.Broker
   alias KafkaEx.Server.State
 
-  require Logger
+  alias KafkaEx.Utils.Logger
 
   @consumer_group_update_interval 30_000
 
@@ -273,7 +273,7 @@ defmodule KafkaEx.Server0P10AndLater do
 
     case broker do
       nil ->
-        Logger.log(:error, "Coordinator for topic is not available")
+        Logger.error("Coordinator for topic is not available")
         {:topic_not_found, state}
 
       _ ->

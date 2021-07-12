@@ -7,8 +7,6 @@ defmodule KafkaEx.DefaultPartitionerTest do
   alias KafkaEx.Protocol.Metadata.TopicMetadata
   alias KafkaEx.Protocol.Metadata.PartitionMetadata
 
-  import ExUnit.CaptureLog
-
   use ExUnit.Case
 
   def metadata(partitions \\ 5) do
@@ -91,9 +89,11 @@ defmodule KafkaEx.DefaultPartitionerTest do
       ]
     }
 
-    assert capture_log(fn ->
-             DefaultPartitioner.assign_partition(request, metadata(5))
-           end) =~
-             "KafkaEx.DefaultPartitioner: couldn't assign partition due to :inconsistent_keys"
+    fun = fn -> DefaultPartitioner.assign_partition(request, metadata(5)) end
+
+    msg =
+      "Elixir.KafkaEx.DefaultPartitioner: couldn't assign partition due to :inconsistent_keys"
+
+    TestHelper.capture_log(:warn, fun, msg)
   end
 end

@@ -7,8 +7,6 @@ defmodule KafkaEx.KayrockTimestampTest do
 
   alias KafkaEx.TimestampNotSupportedError
 
-  require Logger
-
   @moduletag :new_client
 
   setup do

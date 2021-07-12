@@ -1,8 +1,8 @@
 defmodule KafkaEx.NetworkClient do
-  require Logger
   alias KafkaEx.New
   alias KafkaEx.Protocol.Metadata.Broker
   alias KafkaEx.Socket
+  alias KafkaEx.Utils.Logger
 
   @moduledoc false
   @spec create_socket(binary, non_neg_integer, KafkaEx.ssl_options(), boolean) ::
@@ -15,16 +15,14 @@ defmodule KafkaEx.NetworkClient do
            use_ssl
          ) do
       {:ok, socket} ->
-        Logger.log(
-          :debug,
+        Logger.debug(
           "Successfully connected to broker #{inspect(host)}:#{inspect(port)}"
         )
 
         socket
 
       err ->
-        Logger.log(
-          :error,
+        Logger.error(
           "Could not connect to broker #{inspect(host)}:#{inspect(port)} because of error #{
             inspect(err)
           }"
@@ -48,8 +46,7 @@ defmodule KafkaEx.NetworkClient do
         :ok
 
       {_, reason} ->
-        Logger.log(
-          :error,
+        Logger.error(
           "Asynchronously sending data to broker #{inspect(broker.host)}:#{
             inspect(broker.port)
           } failed with #{inspect(reason)}"
@@ -75,8 +72,7 @@ defmodule KafkaEx.NetworkClient do
               data
 
             {:error, reason} ->
-              Logger.log(
-                :error,
+              Logger.error(
                 "Receiving data from broker #{inspect(broker.host)}:#{
                   inspect(broker.port)
                 } failed with #{inspect(reason)}"
@@ -88,8 +84,7 @@ defmodule KafkaEx.NetworkClient do
           end
 
         {_, reason} ->
-          Logger.log(
-            :error,
+          Logger.error(
             "Sending data to broker #{inspect(broker.host)}:#{
               inspect(broker.port)
             } failed with #{inspect(reason)}"

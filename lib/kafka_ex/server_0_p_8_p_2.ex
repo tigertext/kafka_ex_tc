@@ -150,8 +150,7 @@ defmodule KafkaEx.Server0P8P2 do
     {response, state} =
       case broker do
         nil ->
-          Logger.log(
-            :error,
+          Logger.error(
             "Coordinator for topic #{offset_fetch.topic} is not available"
           )
 
@@ -224,8 +223,7 @@ defmodule KafkaEx.Server0P8P2 do
         0,
         error_code
       ) do
-    Logger.log(
-      :error,
+    Logger.error(
       "Fetching consumer_group #{consumer_group} metadata failed with error_code #{
         inspect(error_code)
       }"
@@ -280,8 +278,7 @@ defmodule KafkaEx.Server0P8P2 do
               last_offset
 
             [] ->
-              Logger.log(
-                :error,
+              Logger.error(
                 "Not able to retrieve the last offset, the kafka server is probably throttling your requests"
               )
 

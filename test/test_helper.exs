@@ -1,3 +1,5 @@
+Code.put_compiler_option(:warnings_as_errors, true)
+
 ExUnit.start()
 
 ExUnit.configure(
@@ -15,7 +17,32 @@ ExUnit.configure(
 defmodule TestHelper do
   alias KafkaEx.New.Client
   alias KafkaEx.New.NodeSelector
-  require Logger
+  alias KafkaEx.Utils.Logger
+
+  use ExUnit.Case
+
+  def capture_log(level, fun, msg) do
+    pid = self()
+    :dbg.stop_clear()
+    :dbg.start()
+
+    :dbg.tracer(:process, {
+      fn
+        {_, _, _, {_, ^level, [^msg]}}, _ ->
+          send(pid, :passed)
+
+        {_, _, _, {_, ^level, [^msg, _]}}, _ ->
+          send(pid, :passed)
+      end,
+      0
+    })
+
+    :dbg.tpl(KafkaEx.Utils.Logger, level, [])
+    :dbg.p(:all, :c)
+    fun.()
+    :dbg.stop_clear()
+    assert_received :passed
+  end
 
   def generate_random_string(string_length \\ 20) do
     1..string_length

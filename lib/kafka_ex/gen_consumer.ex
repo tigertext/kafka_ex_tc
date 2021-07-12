@@ -198,8 +198,7 @@ defmodule KafkaEx.GenConsumer do
   alias KafkaEx.Protocol.Offset.Response, as: OffsetResponse
   alias KafkaEx.Protocol.Fetch.Response, as: FetchResponse
   alias KafkaEx.Protocol.Fetch.Message
-
-  require Logger
+  alias KafkaEx.Utils.Logger
 
   @typedoc """
   Option values used when starting a `KafkaEx.GenConsumer`.
@@ -371,7 +370,7 @@ defmodule KafkaEx.GenConsumer do
           end
 
         pattern = '~p ~p received unexpected message in handle_info/2: ~p~n'
-        :error_logger.error_msg(pattern, [__MODULE__, proc, msg])
+        Logger.error(pattern, [__MODULE__, proc, msg])
         {:noreply, consumer_state}
       end
 
@@ -890,9 +889,9 @@ defmodule KafkaEx.GenConsumer do
         :ok
     end
 
-    Logger.debug(fn ->
+    Logger.debug(
       "Committed offset #{topic}/#{partition}@#{offset} for #{group}"
-    end)
+    )
 
     %State{
       state

@@ -278,9 +278,9 @@ defmodule KafkaEx.Server do
     # credo:disable-for-next-line Credo.Check.Refactor.LongQuoteBlocks
     quote location: :keep do
       @behaviour KafkaEx.Server
-      require Logger
       alias KafkaEx.NetworkClient
       alias KafkaEx.Protocol.Offset
+      alias KafkaEx.Utils.Logger
 
       @retry_count 3
       @wait_time 10
@@ -371,8 +371,7 @@ defmodule KafkaEx.Server do
       end
 
       def terminate(reason, state) do
-        Logger.log(
-          :debug,
+        Logger.debug(
           "Shutting down worker #{inspect(state.worker_name)}, reason: #{
             inspect(reason)
           }"
@@ -469,8 +468,7 @@ defmodule KafkaEx.Server do
         response =
           case broker do
             nil ->
-              Logger.log(
-                :error,
+              Logger.error(
                 "kafka_server_produce_send_request: leader for topic #{
                   produce_request.topic
                 }/#{produce_request.partition} is not available"
@@ -550,8 +548,7 @@ defmodule KafkaEx.Server do
         {response, state} =
           case broker do
             nil ->
-              Logger.log(
-                :error,
+              Logger.error(
                 "kafka_server_offset: leader for topic #{topic}/#{partition} is not available"
               )
 
@@ -676,8 +673,7 @@ defmodule KafkaEx.Server do
             error_code,
             server_api_versions
           ) do
-        Logger.log(
-          :error,
+        Logger.error(
           "Metadata request for topic #{inspect(topic)} failed with error_code #{
             inspect(error_code)
           }"
@@ -735,7 +731,7 @@ defmodule KafkaEx.Server do
               sync_timeout
             }."
 
-          Logger.log(:error, message)
+          Logger.error(message)
           raise message
           :no_metadata_available
         end
@@ -861,11 +857,11 @@ defmodule KafkaEx.Server do
 
         case broker do
           nil ->
-            Logger.error(fn ->
+            Logger.error(
               "network_request: leader for topic #{request.topic}/#{
                 request.partition
               } is not available"
-            end)
+            )
 
             {{:error, :topic_not_found}, updated_state}
 
@@ -930,8 +926,7 @@ defmodule KafkaEx.Server do
 
           _ ->
             Enum.each(brokers_to_remove, fn broker ->
-              Logger.log(
-                :debug,
+              Logger.debug(
                 "Closing connection to broker #{broker.node_id}: #{
                   inspect(broker.host)
                 } on port #{inspect(broker.port)}"
@@ -954,8 +949,7 @@ defmodule KafkaEx.Server do
            ) do
         case Enum.find(brokers, &(metadata_broker.node_id == &1.node_id)) do
           nil ->
-            Logger.log(
-              :debug,
+            Logger.debug(
               "Establishing connection to broker #{metadata_broker.node_id}: #{
                 inspect(metadata_broker.host)
               } on port #{inspect(metadata_broker.port)}"

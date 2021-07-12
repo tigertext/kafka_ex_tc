@@ -14,7 +14,7 @@ defmodule KafkaEx.ConsumerGroup.Manager do
   alias KafkaEx.Protocol.Metadata.Response, as: MetadataResponse
   alias KafkaEx.Protocol.SyncGroup.Request, as: SyncGroupRequest
   alias KafkaEx.Protocol.SyncGroup.Response, as: SyncGroupResponse
-  require Logger
+  alias KafkaEx.Utils.Logger
 
   defmodule State do
     @moduledoc false
@@ -305,10 +305,10 @@ defmodule KafkaEx.ConsumerGroup.Manager do
   end
 
   defp on_successful_join(state, join_response) do
-    Logger.debug(fn ->
+    Logger.debug(
       "Joined consumer group #{state.group_name} generation " <>
         "#{join_response.generation_id} as #{join_response.member_id}"
-    end)
+    )
 
     new_state = %State{
       state
@@ -401,19 +401,19 @@ defmodule KafkaEx.ConsumerGroup.Manager do
 
     case leave_group_response do
       %{error_code: :no_error} ->
-        Logger.debug(fn -> "Left consumer group #{group_name}" end)
+        Logger.debug("Left consumer group #{group_name}")
 
       %{error_code: error_code} ->
-        Logger.warn(fn ->
+        Logger.warn(
           "Received error #{inspect(error_code)}, " <>
             "consumer group manager will exit regardless."
-        end)
+        )
 
       {:error, reason} ->
-        Logger.warn(fn ->
+        Logger.warn(
           "Received error #{inspect(reason)}, " <>
             "consumer group manager will exit regardless."
-        end)
+        )
     end
 
     {:ok, state}
@@ -525,9 +525,9 @@ defmodule KafkaEx.ConsumerGroup.Manager do
   end
 
   defp warn_if_no_partitions([], group_name, topic) do
-    Logger.warn(fn ->
+    Logger.warn(
       "Consumer group #{group_name} encountered nonexistent topic #{topic}"
-    end)
+    )
   end
 
   defp warn_if_no_partitions(_partitions, _group_name, _topic), do: :ok

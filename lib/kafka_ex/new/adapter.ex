@@ -9,8 +9,6 @@ defmodule KafkaEx.New.Adapter do
   # No new code should rely on this code.  This should only be around to support
   # the compatibility mode during transition to the new API.
 
-  require Logger
-
   alias KafkaEx.Protocol.ApiVersions.ApiVersion
   alias KafkaEx.Protocol.CreateTopics.Response, as: CreateTopicsResponse
   alias KafkaEx.Protocol.CreateTopics.TopicError, as: CreateTopicError
@@ -31,6 +29,7 @@ defmodule KafkaEx.New.Adapter do
   alias KafkaEx.Protocol.Fetch.Response, as: FetchResponse
   alias KafkaEx.Protocol.Fetch.Message, as: FetchMessage
   alias KafkaEx.TimestampNotSupportedError
+  alias KafkaEx.Utils.Logger
 
   alias Kayrock.MessageSet
   alias Kayrock.MessageSet.Message
@@ -218,8 +217,7 @@ defmodule KafkaEx.New.Adapter do
   end
 
   def fetch_response(%{responses: []}) do
-    Logger.log(
-      :error,
+    Logger.error(
       "Not able to retrieve the last offset, the Kafka server is probably throttling your requests"
     )
 

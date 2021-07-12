@@ -39,9 +39,7 @@ defmodule KafkaEx.Mixfile do
   def application do
     [
       mod: {KafkaEx, []},
-      extra_applications: [:logger],
-      applications: [:lager],
-      erl_opts: [parse_transform: "lager_transform"]
+      extra_applications: [:lager]
     ]
   end
 

@@ -1,6 +1,5 @@
 defmodule KafkaEx.Protocol.ApiVersions do
   alias KafkaEx.Protocol
-  require Logger
 
   # the ApiVersions message can also, itself, have different api versions
   @default_this_api_version 0
