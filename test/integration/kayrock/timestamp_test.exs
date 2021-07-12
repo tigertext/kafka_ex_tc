@@ -6,8 +6,7 @@ defmodule KafkaEx.KayrockTimestampTest do
   use ExUnit.Case
 
   alias KafkaEx.TimestampNotSupportedError
-
-  require Logger
+  alias KafkaEx.Utils.Logger
 
   @moduletag :new_client
 

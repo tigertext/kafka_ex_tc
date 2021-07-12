@@ -12,7 +12,7 @@ defmodule KafkaEx.Utils.Logger do
   end
 
   def warn(msg) do
-    log(:warn, msg)
+    log(:warning, msg)
   end
 
   def info(msg) do

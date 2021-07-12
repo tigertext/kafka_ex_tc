@@ -1,5 +1,8 @@
 use Mix.Config
 
+# Stop lager redirecting :error_logger messages
+config :lager, :error_logger_redirect, false
+
 config :kafka_ex,
   # A list of brokers to connect to. This can be in either of the following formats
   #

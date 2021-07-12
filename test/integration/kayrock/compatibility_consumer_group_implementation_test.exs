@@ -17,12 +17,11 @@ defmodule KafkaEx.KayrockCompatibilityConsumerGroupImplementationTest do
   alias KafkaEx.ConsumerGroup
   alias KafkaEx.GenConsumer
   alias KafkaEx.Protocol.OffsetFetch
+  alias KafkaEx.Utils.Logger
 
   @topic_name_prefix "consumer_group_implementation_test_kayrock_"
   @partition_count 4
   @consumer_group_name "consumer_group_implementation"
-
-  require Logger
 
   defmodule TestPartitioner do
     # wraps an Agent that we use to capture the fact that the partitioner was
@@ -39,10 +38,10 @@ defmodule KafkaEx.KayrockCompatibilityConsumerGroupImplementationTest do
     end
 
     def assign_partitions(members, partitions) do
-      Logger.debug(fn ->
+      Logger.debug(
         "Consumer #{inspect(self())} got " <>
           "partition assignment: #{inspect(members)} #{inspect(partitions)}"
-      end)
+      )
 
       Agent.update(__MODULE__, &(&1 + 1))
 
@@ -70,9 +69,9 @@ defmodule KafkaEx.KayrockCompatibilityConsumerGroupImplementationTest do
     end
 
     def init(topic, partition) do
-      Logger.debug(fn ->
+      Logger.debug(
         "Initialized consumer #{inspect(self())} for #{topic}:#{partition}"
-      end)
+      )
 
       {:ok, %{message_sets: []}}
     end
@@ -94,9 +93,9 @@ defmodule KafkaEx.KayrockCompatibilityConsumerGroupImplementationTest do
     end
 
     def handle_message_set(message_set, state) do
-      Logger.debug(fn ->
+      Logger.debug(
         "Consumer #{inspect(self())} handled message set #{inspect(message_set)}"
-      end)
+      )
 
       {
         :async_commit,
@@ -114,10 +113,10 @@ defmodule KafkaEx.KayrockCompatibilityConsumerGroupImplementationTest do
   def correct_last_message?([], _, _), do: false
 
   def correct_last_message?(message_set, expected_message, expected_offset) do
-    Logger.debug(fn ->
+    Logger.debug(
       "Got message set: #{inspect(message_set)} " <>
         "expecting '#{expected_message}' @ offset #{expected_offset}"
-    end)
+    )
 
     message = List.last(message_set)
     message.value == expected_message && message.offset == expected_offset

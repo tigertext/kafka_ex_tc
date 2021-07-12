@@ -39,7 +39,7 @@ defmodule KafkaEx.Mixfile do
   def application do
     [
       mod: {KafkaEx, []},
-      applications: [:lager]
+      extra_applications: [:lager, :logger]
     ]
   end
 
